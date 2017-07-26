@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="5dp">
+
+
+    <TextView
+        android:id="@+id/item_chat_tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/yuanjiao_gray"
+        android:paddingBottom="3dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="3dp"
+        android:text="04月01号 08:55"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="10sp" />
+
+    <RelativeLayout
+        android:id="@+id/item_chat_rl_other"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="50dp"
+        android:paddingBottom="10dp">
+
+        <com.knight.helper.view.CircleImageView
+            android:id="@+id/item_chat_avatar_other"
+            android:layout_width="@dimen/item_image"
+            android:layout_height="@dimen/item_image"
+            android:src="@mipmap/wo"
+            android:layout_alignParentLeft="true" />
+
+
+        <TextView
+            android:id="@+id/item_chat_tv_other"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/item_chat_avatar_other"
+            android:background="@drawable/item_robot"
+            android:textColor="@color/c6"
+            android:textSize="@dimen/item_tv" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/item_chat_rl_self"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+        android:paddingBottom="10dp">
+
+        <TextView
+            android:id="@+id/item_chat_tv_self"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/item_chat_avatar_self"
+            android:background="@drawable/item_robot"
+            android:text="话哈啊啊啊"
+            android:textColor="@color/c6"
+            android:textSize="@dimen/item_tv" />
+
+        <com.knight.helper.view.CircleImageView
+            android:src="@mipmap/ta"
+            android:id="@+id/item_chat_avatar_self"
+            android:layout_width="@dimen/item_image"
+            android:layout_height="@dimen/item_image"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="20dp" />
+
+
+    </RelativeLayout>
+</LinearLayout>

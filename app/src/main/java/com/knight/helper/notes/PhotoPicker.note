@@ -1,0 +1,129 @@
+介绍:这是一个关于拍照以及选取图片相关的Android插件
+
+地址:https://github.com/donglua/PhotoPicker
+
+
+1:添加依赖
+
+dependencies {
+    compile 'me.iwf.photopicker:PhotoPicker:0.9.5@aar'
+
+    compile 'com.android.support:appcompat-v7:23.4.0'//-------- 这两个版本需一致,23.4.0
+    compile 'com.android.support:recyclerview-v7:23.4.0'//----- 这两个版本需一致,23.4.0
+    compile 'com.android.support:design:23.4.0'
+    compile 'com.nineoldandroids:library:2.4.0'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+}
+appcompat-v7version >= 23.0.0
+
+
+2:配置清单
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    用户权限
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+  <application
+    ...
+    >
+    ...
+
+    PhotoPicker相关的activity
+    <activity android:name="me.iwf.photopicker.PhotoPickerActivity"
+      android:theme="@style/Theme.AppCompat.NoActionBar"
+       />
+
+
+    <activity android:name="me.iwf.photopicker.PhotoPagerActivity"
+      android:theme="@style/Theme.AppCompat.NoActionBar"/>
+
+  </application>
+</manifest>
+
+
+3:添加style样式
+
+<style name="actionBarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+  <item name="android:textColorPrimary">@android:color/primary_text_light</item>
+  <item name="actionBarSize">@dimen/actionBarSize</item>
+</style>
+
+<style name="customTheme" parent="Theme.AppCompat.Light.NoActionBar">
+  <item name="actionBarTheme">@style/actionBarTheme</item>
+  <item name="colorPrimary">#FFA500</item>
+  <item name="actionBarSize">@dimen/actionBarSize</item>
+  <item name="colorPrimaryDark">#CCa500</item>
+</style>
+
+
+4:混淆设置
+
+
+# Glide
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
+    **[] $VALUES;
+    public *;
+}
+# nineoldandroids
+-keep interface com.nineoldandroids.view.** { *; }
+-dontwarn com.nineoldandroids.**
+-keep class com.nineoldandroids.** { *; }
+# support-v7-appcompat
+-keep public class android.support.v7.widget.** { *; }
+-keep public class android.support.v7.internal.widget.** { *; }
+-keep public class android.support.v7.internal.view.menu.** { *; }
+-keep public class * extends android.support.v4.view.ActionProvider {
+    public <init>(android.content.Context);
+}
+# support-design
+-dontwarn android.support.design.**
+-keep class android.support.design.** { *; }
+-keep interface android.support.design.** { *; }
+-keep public class android.support.design.R$* { *; }
+
+=======================================用法=============================================
+
+
+①:选取
+PhotoPicker.builder()//选择图片和拍照
+                        .setPhotoCount(100)//可选择的照片数量
+                        .setShowCamera(true)//是否显示拍照图标
+                        .setShowGif(true)//是否显示GIF图片---待验证
+                        .setPreviewEnabled(true)//点击图片是否可预览
+                        .setGridColumnCount(4)//每行照片的数量
+                        .start(mActivity, LoginFragment.this, PhotoPicker.REQUEST_CODE);//开启
+
+
+
+②:返回数据
+ArrayList<String> photos ;//用于存放选择图片的地址
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK && requestCode == PhotoPicker.REQUEST_CODE) {
+            if (data != null) {
+                photos =
+                        data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
+                LogUtil.e(photos.toString());
+            }
+        }
+    }
+
+
+
+③:查看
+PhotoPreview.builder()//用于显示图片组
+                        .setPhotos(photos)//图片组的集合---注意,该list必须有图片(物理地址绝对路径)
+                        //.setCurrentItem(4)//默认选择第几个
+                        .setShowDeleteButton(true)//是否显示删除按钮....这个貌似需要自己实现删除的功能
+                        .start(mActivity,mFragment);//开启
+
+
+==========================================就这么简单...==================================
+
+
