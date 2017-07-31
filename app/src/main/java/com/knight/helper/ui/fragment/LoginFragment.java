@@ -85,11 +85,11 @@ public class LoginFragment extends BaseFragment implements Serializable {
         mFragment = this;
 
 
-//        try {
-//            mApp.db.delete(UserBean.class);//清空user表数据
-//        } catch (DbException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            mApp.db.delete(UserBean.class);//清空user表数据
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
 
         is_password = SPUtils.getValueBoolean(mActivity
                 , SPConstant.USER_CONFIG_XML
@@ -303,7 +303,34 @@ public class LoginFragment extends BaseFragment implements Serializable {
     }
 
 
-
-
-
+    //以下为测试切换Fragment时走的方法
+//
+//    @Override
+//    public Object getEnterTransition() {
+//        LogUtil.e("Login---getEnterTransition");
+//        return super.getEnterTransition();
+//    }
+//
+//    @Override
+//    public Object getExitTransition() {
+//        LogUtil.e("Login---getExitTransition");
+//        return super.getExitTransition();
+//
+//    }
+//
+//    @Override
+//    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
+//        LogUtil.e("Login---onCreateAnimation");
+//
+//        LogUtil.e("Login===transit" + transit);
+//        LogUtil.e("Login===enter" + enter);
+//        LogUtil.e("Login===nextAnim" + nextAnim);
+//        return super.onCreateAnimation(transit, enter, nextAnim);
+//    }
+//
+//    @Override
+//    public void onHiddenChanged(boolean hidden) {
+//        super.onHiddenChanged(hidden);
+//        LogUtil.e("Login---onHiddenChanged");
+//    }
 }

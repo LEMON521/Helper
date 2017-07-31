@@ -1,0 +1,55 @@
+在Activity中(FragmentActivity)
+处理多个Fragment的方法为getSupportFragmentManager()   ---v4包下的
+
+在Fragment中
+处理多个Fragment的方法为getFragmentManager()   ---v4包下的
+
+但他们返回的都是android.support.v4.app;包下的FragmentManager类
+
+在
+
+getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.content, loginFragment, "LoginFragment")
+                .add(R.id.content, registerFragment, "RegisterFragment")
+                .hide(loginFragment)
+                .hide(registerFragment)
+                .show(loginFragment)
+                .commit();
+
+中: 如上代码,我们用到的是add(),hide(),show()方法,
+该方法的最大好处就是切换Fragment不销毁上一个Fragment
+因此,也就不存在走Fragment的生命周期
+
+但是会走以下方法
+
+假如是从FragmentA-->FragmentB
+
+getEnterTransition  B中--进 转换
+getExitTransition   A中--出 转换
+onCreateAnimation   A
+onHiddenChanged     A
+onCreateAnimation   B
+onHiddenChanged     B
+
+由此可见:
+getEnterTransition方法中: 就是将目标Fragment放置在FragmentTransaction(由beginTransaction()得到)里面
+
+getExitTransition:       将当前的Fragment从FragmentTransaction中移出去
+
+onCreateAnimation:       顾名思义--动画,对于A而言 : 应为当前Fragment的隐藏动画
+                                      对于B而言 : 应为目标Fragment的启动动画
+
+onHiddenChanged          顾名思义--是否隐藏
+
+                         对于A而言: 当前Fragment隐藏,所以boolean值应该为true
+                         对于B而言: 目标Fragment显示,所以boolean值应该为false
+
+                         注意,其中的boolean值是系统自动传进来的
+
+                         所以,我们可以根据Boolean的状态来做一些事情
+
+注:关于动画的方面,该网址有详细介绍---
+http://www.cnblogs.com/mengdd/p/3494041.html
+
+

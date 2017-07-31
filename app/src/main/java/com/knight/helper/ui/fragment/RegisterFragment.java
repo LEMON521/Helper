@@ -300,4 +300,35 @@ public class RegisterFragment extends BaseFragment implements Serializable {
         LogUtil.e("是否显示==" + hidden);
 
     }
+
+
+    //以下为测试切换Fragment时走的方法
+//    @Override
+//    public Object getEnterTransition() {
+//        LogUtil.e("Register===getEnterTransition");
+//        return super.getEnterTransition();
+//    }
+//
+//    @Override
+//    public Object getExitTransition() {
+//        LogUtil.e("Register===getExitTransition");
+//        return super.getExitTransition();
+//
+//    }
+//
+//    @Override
+//    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
+//        LogUtil.e("Register===onCreateAnimation");
+//
+//        LogUtil.e("Register===transit" + transit);
+//        LogUtil.e("Register===enter" + enter);
+//        LogUtil.e("Register===nextAnim" + nextAnim);
+//        return super.onCreateAnimation(transit, enter, nextAnim);
+//    }
+//
+//    @Override
+//    public void onHiddenChanged(boolean hidden) {
+//        super.onHiddenChanged(hidden);
+//        LogUtil.e("Register===onHiddenChanged");
+//    }
 }
