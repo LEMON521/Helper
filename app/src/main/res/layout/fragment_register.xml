@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="21"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="2"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="5dp"
+            android:paddingTop="5dp">
+
+            <ImageView
+                android:id="@+id/fragment_register_iv_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/image_user_defult" />
+
+            <ImageView
+                android:id="@+id/fragment_register_iv_line_user"
+                android:layout_width="2dp"
+                android:layout_height="15dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/fragment_register_iv_user"
+                android:background="@color/c9" />
+
+            <EditText
+                android:id="@+id/fragment_register_et_user"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/fragment_register_iv_line_user"
+                android:background="@null"
+                android:hint="@string/fragment_login_code_hint"
+                android:singleLine="true"
+                android:textSize="@dimen/tv_middle" />
+
+            <TextView
+                android:id="@+id/fragment_register_tv_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/fragment_register_et_user"
+                android:text=""
+                android:textColor="@color/red"
+                android:textSize="@dimen/tv_small" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="2"
+            android:gravity="center_vertical"
+            android:paddingBottom="3dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="5dp"
+            android:paddingTop="3dp">
+
+            <ImageView
+                android:id="@+id/fragment_register_iv_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/image_password" />
+
+            <ImageView
+                android:id="@+id/fragment_register_iv_password_line"
+                android:layout_width="2dp"
+                android:layout_height="15dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/fragment_register_iv_password"
+                android:background="@color/c9" />
+
+            <EditText
+                android:id="@+id/fragment_register_et_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/fragment_register_iv_password_line"
+                android:background="@null"
+                android:hint="@string/fragment_login_password_hint"
+                android:singleLine="true"
+                android:textSize="@dimen/tv_middle" />
+
+
+            <TextView
+                android:id="@+id/fragment_register_tv_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/fragment_register_et_password"
+                android:text=""
+                android:textColor="@color/red"
+                android:textSize="@dimen/tv_small" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="2"
+            android:gravity="center_vertical"
+            android:paddingBottom="3dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="5dp"
+            android:paddingTop="3dp">
+
+            <ImageView
+                android:id="@+id/fragment_register_iv_password_again"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/image_password" />
+
+            <ImageView
+                android:id="@+id/fragment_register_iv_password_line_again"
+                android:layout_width="2dp"
+                android:layout_height="15dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/fragment_register_iv_password_again"
+                android:background="@color/c9" />
+
+            <EditText
+                android:id="@+id/fragment_register_et_password_again"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/fragment_register_iv_password_line_again"
+                android:background="@null"
+                android:hint="@string/fragment_register_password_confirm"
+                android:singleLine="true"
+                android:textSize="@dimen/tv_middle" />
+
+
+            <TextView
+                android:id="@+id/fragment_register_tv_password_again"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/fragment_register_et_password_again"
+                android:text=""
+                android:textColor="@color/red"
+                android:textSize="@dimen/tv_small" />
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/fragment_register_btn_register"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="10dp"
+            android:background="@mipmap/login_btn_blue"
+            android:text="@string/fragment_register_register"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/tv_large" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="15" />
+    </LinearLayout>
+</LinearLayout>

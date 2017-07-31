@@ -14,10 +14,12 @@
     <string name="title_home">主页</string>
     <string name="title_fun">乐一乐</string>
     <string name="title_weather">历史天气</string>
+
+    <!--chat fragment 聊天界面-->
     <string name="chat_send_hint">想跟我说什么情话呢☺️</string>
     <string name="send">发送</string>
 
-    <!--login fragment-->
+    <!--login fragment 登录页面-->
     <string name="fragment_login_forget">忘记密码</string>
     <string name="fragment_login_register">注册</string>
     <string name="fragment_login_login">登录</string>
@@ -25,4 +27,8 @@
     <string name="fragment_login_code_hint">请输入您的用户名</string>
     <string name="fragment_login_remember_password">记住密码</string>
     <string name="fragment_login_remember_auto">自动登录</string>
+
+    <!--register fragment 注册页面-->
+    <string name="fragment_register_password_confirm">确认您的密码</string>
+    <string name="fragment_register_register">提交</string>
 </resources>

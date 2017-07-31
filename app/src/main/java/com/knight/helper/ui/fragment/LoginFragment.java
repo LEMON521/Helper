@@ -16,12 +16,16 @@ import android.widget.TextView;
 
 import com.knight.helper.MainActivity;
 import com.knight.helper.R;
+import com.knight.helper.bean.user.UserBean;
 import com.knight.helper.constant.SPConstant;
 import com.knight.helper.ui.BaseFragment;
+import com.knight.helper.utils.MD5Utils;
 import com.knight.helper.utils.MyToast;
 import com.knight.helper.utils.SPUtils;
 
-import org.xutils.common.util.MD5;
+import org.xutils.DbManager;
+import org.xutils.common.util.LogUtil;
+import org.xutils.ex.DbException;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
@@ -73,10 +77,19 @@ public class LoginFragment extends BaseFragment implements Serializable {
 
     private LoginFragment mFragment;
 
+    private DbManager db;
+
 
     @Override
     public void initView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mFragment = this;
+
+
+//        try {
+//            mApp.db.delete(UserBean.class);//清空user表数据
+//        } catch (DbException e) {
+//            e.printStackTrace();
+//        }
 
         is_password = SPUtils.getValueBoolean(mActivity
                 , SPConstant.USER_CONFIG_XML
@@ -85,7 +98,6 @@ public class LoginFragment extends BaseFragment implements Serializable {
         is_autoLogin = SPUtils.getValueBoolean(mActivity
                 , SPConstant.USER_CONFIG_XML
                 , SPConstant.USER_CONFIG_KEY_LOGIN_AUTO);
-
 
 
         checkedListener = new CompoundButton.OnCheckedChangeListener() {
@@ -133,6 +145,10 @@ public class LoginFragment extends BaseFragment implements Serializable {
         is_password = cb_password.isChecked();
         is_autoLogin = cb_auto.isChecked();
 
+        if(is_autoLogin){
+            loginExamine();
+        }
+
     }
 
 
@@ -168,27 +184,38 @@ public class LoginFragment extends BaseFragment implements Serializable {
          * 登陆成功,检查是否记住密码,是否自动登录
          */
 
+        long count = -1;
+        try {
+            count = mApp
+                    .db
+                    .selector(UserBean.class)
+                    .where("username", "=", str_account)
+                    .and("password", "=", MD5Utils.getMD5(str_password))
+                    .count();//返回符合条件的记录数
 
-        if (!str_account.equals("aaa")) {
-            MyToast.showShort(mActivity, "用户名错误!");
-            et_account.setText("");
-            return;
+
+            LogUtil.e("密码==" + MD5Utils.getMD5(str_password));
+            for (UserBean userBean : mApp.db.findAll(UserBean.class)) {
+                LogUtil.e("===" + userBean.toString() + "===");
+            }
+
+        } catch (DbException e) {
+            count = -1;
+            e.printStackTrace();
+        } finally {
+            if (count == 1) {
+                rememberPassword();
+                Intent intent = new Intent(mActivity, MainActivity.class);
+                startActivity(intent);
+                mActivity.finish();
+            } else if (count == 0) {
+                MyToast.showShort(mActivity, "账号或密码错误!");
+            } else if (count == -1) {
+                MyToast.showShort(mActivity, "登录失败,请联系管理员");
+            }
         }
 
-        if (!MD5.md5(str_password).equals(MD5.md5("111"))) {
 
-            MyToast.showShort(mActivity, "密码错误!");
-            et_password.setText("");
-            return;
-        }
-
-
-        rememberPassword();
-
-
-        Intent intent = new Intent(mActivity, MainActivity.class);
-        startActivity(intent);
-        mActivity.finish();
     }
 
 
@@ -257,15 +284,26 @@ public class LoginFragment extends BaseFragment implements Serializable {
                 break;
 
             case R.id.fragment_login_tv_register://注册
+                getFragmentManager()
+                        .beginTransaction()
+                        .hide(mActivity.mFragmentMaps.get("LoginFragment"))
+                        .show(mActivity.mFragmentMaps.get("RegisterFragment"))
+                        .commit();
+                mActivity.mFragmentMaps.put("ShowFragment", mActivity.mFragmentMaps.get("RegisterFragment"));
+
                 break;
 
             case R.id.fragment_login_tv_forget://找回密码
                 //ArrayList<String> photoPaths = new ArrayList<>();
 
+
                 break;
         }
 
     }
+
+
+
 
 
 }

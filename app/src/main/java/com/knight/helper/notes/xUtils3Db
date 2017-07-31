@@ -1,0 +1,355 @@
+/**                        数据库相关操作                            **/
+
+
+引言:
+android中的orm框架，一行代码就可以进行增删改查；
+支持事务，默认关闭；
+可通过注解自定义表名，列名，外键，唯一性约束，NOT NULL约束，CHECK约束等（需要混淆> - 的时候请注解表名和列名）；
+支持绑定外键，保存实体时外键关联实体自动保存或更新；
+自动加载外键关联实体，支持延时加载；
+支持链式表达查询，更直观的查询语义
+
+
+加注了@Table的实体类将被映射到sqlite中的数据库表,
+@Table注解有属性name和onCreated两个属性,
+name属性决定了该实体类映射的数据库表名,
+而onCreated属性则可以用来添加表一级的属性或约束,例如创建联和唯一索引等
+
+加注了@Column的实体类属性将会映射到sqlite数据库中的字段,
+@Column注解有name、property、isId、autoGen属性,
+name属性决定了实体类属性对应的数据库字段名;
+property属性可以用来添加数据库中字段一级的属性或约束条件例如not null,索引等;
+isId属性表示该字段是否是主键,默认为false;
+autoGen则表示如果一个字段为主键,是否自增长,默认为true,所以该字段只有在isId属性为true时有效.
+未加注@Column注解的字段将不映射sqlite字段
+
+
+用法:-----------------------------------------------
+@Table(name = "user",
+ onCreated = "CREATE UNIQUE INDEX realative_unique ON user(NAME, EMAIL)") //为表创建NAME,EMAIL联合唯一索引
+public class User {
+    @Column(
+            name = "ID",
+            isId = true,
+            autoGen = true
+    )
+    private int id;
+    @Column(name = "NAME",property = "NOT NULL")//NAME字段非空
+    private String name;
+
+    @Column(name = "EMAIL",property = "NOT NULL")
+    private String email;
+
+    @Column(name = "MOBILE")
+    private String mobile;
+
+    @Column(name = "REGTIME")
+    private Date regTime;
+
+    public User(){
+
+    }
+    public User(String name, String email, String mobile,Date regTime){
+        this.name = name;
+        this.email = email;
+        this.mobile = mobile;
+        this.regTime = regTime;
+    }
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public String getEmail() {
+        return email;
+    }
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    public String getMobile() {
+        return mobile;
+    }
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+    public Date getRegTime() {
+        return regTime;
+    }
+    public void setRegTime(Date regTime) {
+        this.regTime = regTime;
+    }
+    public String toString(){
+        return "{id="+id+",name="+name+",email="+email+",mobile="+mobile+",regTime="+regTime+"}";
+    }
+}
+
+
+如果需要添加联合唯一索引则可以在@Table注解加上
+onCreated = “CREATE UNIQUE INDEX unique_name ON table_name(column1, column2)”)
+为表创建column1,column2联合唯一索引
+
+
+
+获取DbManager:
+
+org.xutils.DbManager集成了所有对数据库表的操作,
+类似于SpringJDBC,Hibernate等服务端ORM框架的SessionTemplate,DaoTemplate类,
+我们可以通过如下获取该对象
+
+protected DbManager db;
+protected void initDb(){
+        //本地数据的初始化
+        DbManager.DaoConfig daoConfig = new DbManager.DaoConfig()
+                .setDbName("xutils3_db") //设置数据库名
+                .setDbVersion(1) //设置数据库版本,每次启动应用时将会检查该版本号,
+                //发现数据库版本低于这里设置的值将进行数据库升级并触发DbUpgradeListener
+                .setAllowTransaction(true)//设置是否开启事务,默认为false关闭事务
+                .setTableCreateListener(new DbManager.TableCreateListener() {
+                    @Override
+                    public void onTableCreate(DbManager db, TableEntity<?> table) {
+                        //balabala...
+                    }
+                })//设置数据库创建时的Listener
+                .setDbUpgradeListener(new DbManager.DbUpgradeListener() {
+                    @Override
+                    public void onUpgrade(DbManager db, int oldVersion, int newVersion) {
+                        //balabala...
+                    }
+                });//设置数据库升级时的Listener,这里可以执行相关数据库表的相关修改,比如alter语句增加字段等
+                //.setDbDir(null);//设置数据库.db文件存放的目录,默认为包名下databases目录下
+        db = x.getDb(daoConfig);
+}
+
+
+
+
+======新增实体记录======
+
+新增实体记录或者实体记录List可以通过org.xutils.DbManager#save或者#saveOrUpdate或者#saveBindingId方法,
+这三个方法内部会判断传入的是一个List<T>还是一个扁平化的Object来做相应的处理,
+但这三个方法虽然都能保存对象或者对象List,但又有区别:
+
+db.save(entity);//保存成功之后【不会】对user的主键进行赋值绑定
+db.saveOrUpdate(entity);//如果一个对象主键为null则会新增该对象,成功之后【会】对user的主键进行赋值绑定,否则根据主键去查找更新
+db.saveBindingId(entity);//保存成功之后【会】对user的主键进行赋值绑定,并返回保存是否成功
+
+
+
+protected void dbAdd() throws DbException {
+        //User user = new User("Kevingo","caolbmail@gmail.com","13299999999",new Date());
+        //db.save(user);//保存成功之后【不会】对user的主键进行赋值绑定
+        //db.saveOrUpdate(user);//保存成功之后【会】对user的主键进行赋值绑定
+        //db.saveBindingId(user);//保存成功之后【会】对user的主键进行赋值绑定,并返回保存是否成功
+
+        List<User> users = new ArrayList<User>();
+        for (int i = 0; i < 10; i++) {
+            //User的@Table注解onCreated属性加了name,email联合唯一索引.
+            User user = new User("Kevingo" + System.currentTimeMillis()+i, "caolbmail@gmail.com", "13299999999", new Date());
+            users.add(user);
+        }
+        db.saveBindingId(users);
+        showDbMessage("【dbAdd】第一个对象:" + users.get(0).toString());//user的主键Id不为0
+    }
+
+
+
+======查询实体记录======
+
+查询实体记录
+
+如果要查询某张表内的所有对象,
+可以通过org.xutils.DbManager#findAll(Class<T> class),
+根据对象的主键id来查找org.xutils.DbManager#findById(Class<T> entityType, Object idValue),
+当然如果只有这么几个方法来提供查找实体对象显然是不足以满足需求的,
+所以xUtil的作者还提供了了一个更加灵活的查询对象org.xutils.db.Selector.
+
+该对象提供了where(), and(), or(),orderBy(), groupBy(), limit(), offset(), count()等方法来实现灵活的复杂查询,
+而且这些方法都返回对象本身,所以可以进行链式操作.
+
+
+protected void dbFind() throws DbException {
+        //List<User> users = db.findAll(User.class);
+        //showDbMessage("【dbFind#findAll】第一个对象:"+users.get(0).toString());
+
+        //User user = db.findById(User.class, 1);
+        //showDbMessage("【dbFind#findById】第一个对象:" + user.toString());
+
+        //long count = db.selector(User.class).where("name","like","%kevin%").and("email","=","caolbmail@gmail.com").count();//返回复合条件的记录数
+        //showDbMessage("【dbFind#selector】复合条件数目:" + count);
+
+        List<User> users = db.selector(User.class)
+                .where("name","like","%kevin%")
+                .and("email", "=", "caolbmail@gmail.com")
+                .orderBy("regTime",true)
+                .limit(2) //只查询两条记录
+                .offset(2) //偏移两个,从第三个记录开始返回,limit配合offset达到sqlite的limit m,n的查询
+                .findAll();
+        if(users == null || users.size() == 0){
+           return;//请先调用dbAdd()方法
+        }
+        showDbMessage("【dbFind#selector】复合条件数目:" + users.size());
+    }
+
+
+
+
+======删除对象======
+
+删除一个对象或者对象List通过org.xutils.DbManager#deleteById(Class<T> entityType, Object idValue)来删除某个主键对应的记录,
+
+org.xutils.DbManager#delete(Object entity)方法删除某个已经存在表中的对象,
+org.xutils.DbManager#delete(Class<T> entityType)则会删除表中所有记录,相当于清空表数据.
+
+但如果只有以上方法来提供删除操作显然还不够灵活,如果需要根据where条件来删除符合条件的记录,
+则可以使用org.xutils.db.sqlite.WhereBuilder对象来达到目的,WhereBuilder对象提供了类似Selector对象的and(), or(), expr()等方法来链式操作该对象本身.
+复写的toString方法可以返回其对应的where条件语句.代码如下:
+
+
+protected void dbDelete() throws DbException {
+        List<User> users = db.findAll(User.class);
+        if(users == null || users.size() == 0){
+            return;//请先调用dbAdd()方法
+        }
+        //db.delete(users.get(0)); //删除第一个对象
+        //db.delete(User.class);//删除表中所有的User对象【慎用】
+        //db.delete(users); //删除users对象集合
+        //users =  db.findAll(User.class);
+        // showDbMessage("【dbDelete#delete】数据库中还有user数目:" + users.size());
+
+        WhereBuilder whereBuilder = WhereBuilder.b();
+        whereBuilder.and("id",">","5").or("id","=","1").expr(" and mobile > '2015-12-29 00:00:01' ");
+        db.delete(User.class,whereBuilder);
+        users =  db.findAll(User.class);
+        showDbMessage("【dbDelete#delete】数据库中还有user数目:" + users.size());
+    }
+
+
+
+======更新对象======
+
+更新对象除了几个update方法外还可以通过replace方法实现.
+
+    /**
+     * 保存或更新实体类或实体类的List到数据库, 根据id和其他唯一索引判断数据是否存在.
+     * @param entity
+     * @throws DbException
+     */
+    void replace(Object entity) throws DbException;
+
+
+通过update方法传入WhereBuilder对象和org.xutils.common.util.KeyValue对象实现对复合条件的记录更新指定的列和值
+
+
+protected void dbUpdate() throws DbException {
+        List<User> users = db.findAll(User.class);
+        if(users == null || users.size() == 0){
+            return;//请先调用dbAdd()方法
+        }
+        User user = users.get(0);
+        user.setEmail(System.currentTimeMillis() / 1000 + "@email.com");
+        //db.replace(user);
+        //db.update(user);
+        //db.update(user,"email");//指定只对email列进行更新
+
+        WhereBuilder whereBuilder = WhereBuilder.b();
+        whereBuilder.and("id",">","5").or("id","=","1").expr(" and mobile > '2015-12-29 00:00:01' ");
+        db.update(User.class,whereBuilder,
+         new KeyValue("email",System.currentTimeMillis() / 1000 + "@email.com")
+         ,new KeyValue("mobile","18988888888"));//对User表中复合whereBuilder所表达的条件的记录更新email和mobile
+}
+
+
+更加灵活的sql查询
+
+通过org.xutils.DbManager对象中的一系列exec前缀的方法可以实现sql语句查询
+
+db.execQuery("select * from user where id>=5");
+
+
+
+//---------------------------- 一对多关系的实现 ----------------------------
+
+假如一个User对象对应多个Oder对象我们该如何实现映射呢?
+
+
+Order实体类
+
+
+@Table(name = "order")
+public class Order {
+    @Column(name = "ID", isId = true, autoGen = true)
+    private int id;
+    @Column(name = "NUMBER")
+    private String number;
+    @Column(name = "SUBJECT")
+    private String subject;
+    @Column(name = "USERID")
+    private int userId;
+    public User getUser(DbManager db) throws DbException {
+        return db.findById(User.class, userId);
+    }
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
+    public String getNumber() {
+        return number;
+    }
+    public void setNumber(String number) {
+        this.number = number;
+    }
+    public String getSubject() {
+        return subject;
+    }
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+    public int getUserId() {
+        return userId;
+    }
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+    @Override
+    public String toString() {
+        return this.getClass().getName() + "{id=" + id + ",number=" + number + ",subject=" + subject + ",userId=" + userId + "}";
+    }
+}
+
+
+在User对象增加getOrders方法:
+
+public List<Order> getOrders(DbManager db) throws DbException {
+            return db.selector(Order.class).where("USERID", "=", this.id).findAll();
+    }
+
+
+一对多的查询:
+
+
+protected void one2Money() throws DbException {
+        User user = db.findById(User.class,1);
+        if(user == null){
+            user = new User("Kevingo" + System.currentTimeMillis(), "caolbmail@gmail.com", "13299999990", new Date());
+            db.saveBindingId(user);
+        }
+        for (int i=0;i<5;i++){
+            Order order = new Order();
+            long timeStamp = System.currentTimeMillis() / 1000;
+            order.setNumber(timeStamp + "");
+            order.setSubject("this is a oder-->" + timeStamp);
+            order.setUserId(user.getId());
+            db.save(order);
+        }
+        List<Order> orders = user.getOrders(db);
+        showDbMessage("共有订单"+orders.size()+"个");
+    }

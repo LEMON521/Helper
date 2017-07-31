@@ -41,7 +41,7 @@
     <color name="white">#ffffff</color>
     <color name="tran">#30000000</color>
     <color name="trans">#00000000</color>
-    <color name="red"> #FF0000</color>
+    <color name="red">#FF0000</color>
     <color name="viewfinder_frame">#ff000000</color>
     <color name="viewfinder_laser">#ffff0000</color>
     <color name="viewfinder_mask">#60000000</color>
