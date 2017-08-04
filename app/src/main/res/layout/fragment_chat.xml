@@ -1,31 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="5dp"
-    >
+    android:padding="5dp">
 
-    <ListView
 
-        android:divider="@null"
-        android:dividerHeight="0dp"
-        android:id="@+id/fragment_chat_lv"
+    <com.aspsine.swipetoloadlayout.SwipeToLoadLayout
+        android:id="@+id/swipeToLoadLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="20"></ListView>
+        android:layout_weight="20">
+
+
+        <include
+            android:id="@+id/swipe_refresh_header"
+            layout="@layout/layout_google_hook_header" />
+
+
+        <ListView
+            android:id="@+id/swipe_target"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@null"
+            android:dividerHeight="0dp"></ListView>
+
+
+        <include
+            android:id="@+id/swipe_load_more_footer"
+            layout="@layout/layout_google_hook_footer" />
+    </com.aspsine.swipetoloadlayout.SwipeToLoadLayout>
+
 
     <include
-        layout="@layout/view_chat_reply"
         android:id="@+id/root_reply"
+        layout="@layout/view_chat_reply"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:orientation="vertical"
         android:padding="5dp">
-
-
 
 
     </include>

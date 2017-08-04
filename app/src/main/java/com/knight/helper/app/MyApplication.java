@@ -7,8 +7,6 @@ import org.xutils.common.util.LogUtil;
 import org.xutils.db.table.TableEntity;
 import org.xutils.x;
 
-import java.io.File;
-
 /**
  * Created by lemon on 2017/7/22.
  */
@@ -35,7 +33,7 @@ public class MyApplication extends Application {
                 //设置数据库名，默认xutils.db
                 .setDbName("helper.db")
                 //设置数据库路径，默认存储在app的私有目录
-                .setDbDir(new File("/mnt/sdcard/ahelper/db"))
+                //.setDbDir(new File("/mnt/sdcard/ahelper/db"))//发现一个问题，（在模拟器中）如果将数据库放到sd卡上面，用户卸载程序，重新安装，会出现无法预知的打开数据库错误的的错误
                 //设置数据库的版本号
                 .setDbVersion(1)
                 //设置数据库打开的监听

@@ -18,6 +18,11 @@ public class SPConstant implements Serializable {
     public static final String USER_CONFIG_KEY_ACCOUNT = "key_account";
 
     /**
+     * key_uid uid缓存
+     */
+    public static final String USER_CONFIG_KEY_UID = "key_uid";
+
+    /**
      * key_password 密码缓存--MD5加密
      */
     public static final String USER_CONFIG_KEY_PASSWORD = "key_password";
@@ -33,6 +38,10 @@ public class SPConstant implements Serializable {
      */
     public static final String USER_CONFIG_KEY_PASSWORD_REMEMBER = "key_password_remember";
 
+    /**
+     * key_uid uid缓存
+     */
+    public static final String USER_CONFIG_KEY_IS_LOGIN = "key_is_login";
 
 
 

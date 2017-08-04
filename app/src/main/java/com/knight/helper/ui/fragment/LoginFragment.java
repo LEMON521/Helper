@@ -85,11 +85,14 @@ public class LoginFragment extends BaseFragment implements Serializable {
         mFragment = this;
 
 
-        try {
-            mApp.db.delete(UserBean.class);//清空user表数据
-        } catch (DbException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            mApp.db.dropDb();//删除数据库
+//            mApp.db.dropTable(UserBean.class);//删除表
+//            mApp.db.delete(UserBean.class);//清空user表数据
+//            mApp.db.delete(UserChat.class);//清空userChat表数据
+//        } catch (DbException e) {
+//            e.printStackTrace();
+//        }
 
         is_password = SPUtils.getValueBoolean(mActivity
                 , SPConstant.USER_CONFIG_XML
@@ -145,8 +148,12 @@ public class LoginFragment extends BaseFragment implements Serializable {
         is_password = cb_password.isChecked();
         is_autoLogin = cb_auto.isChecked();
 
-        if(is_autoLogin){
-            loginExamine();
+        if (is_autoLogin) {
+            //判断是否注销过---如果是注销过的，就不自动登录
+            LogUtil.e(SPUtils.getValueBoolean(mActivity, SPConstant.USER_CONFIG_XML, SPConstant.USER_CONFIG_KEY_IS_LOGIN)+"====");
+            if (SPUtils.getValueBoolean(mActivity, SPConstant.USER_CONFIG_XML, SPConstant.USER_CONFIG_KEY_IS_LOGIN)) {
+                loginExamine();
+            }
         }
 
     }
@@ -184,35 +191,51 @@ public class LoginFragment extends BaseFragment implements Serializable {
          * 登陆成功,检查是否记住密码,是否自动登录
          */
 
-        long count = -1;
+        //long count = -1;
+        UserBean loginBean = null;
         try {
-            count = mApp
+            loginBean = mApp
                     .db
                     .selector(UserBean.class)
                     .where("username", "=", str_account)
                     .and("password", "=", MD5Utils.getMD5(str_password))
-                    .count();//返回符合条件的记录数
+                    .findFirst();
 
+            //.count();//返回符合条件的记录数
 
-            LogUtil.e("密码==" + MD5Utils.getMD5(str_password));
-            for (UserBean userBean : mApp.db.findAll(UserBean.class)) {
-                LogUtil.e("===" + userBean.toString() + "===");
-            }
-
-        } catch (DbException e) {
-            count = -1;
-            e.printStackTrace();
-        } finally {
-            if (count == 1) {
+            if (loginBean != null) {
                 rememberPassword();
+
+                loginBean.setLoginAt(System.currentTimeMillis());
+                loginBean.setLoginCount(loginBean.getLoginCount() + 1);
+                loginBean.setOnline(true);
+
+                //将uid缓存起来
+                SPUtils.setValue(mActivity, SPConstant.USER_CONFIG_XML, SPConstant.USER_CONFIG_KEY_UID, loginBean.getUid());
+
+                //loginBean.setNickname("靳宁宁,哈哈");
+
+                mApp.db.saveOrUpdate(loginBean);
+
+                LogUtil.e("密码==" + MD5Utils.getMD5(str_password));
+                for (UserBean userBean : mApp.db.findAll(UserBean.class)) {
+                    LogUtil.e("===" + userBean.toString() + "===");
+                }
+
+                //设置登录状态
+                SPUtils.setValue(mActivity, SPConstant.USER_CONFIG_XML,SPConstant.USER_CONFIG_KEY_IS_LOGIN,true);
+
                 Intent intent = new Intent(mActivity, MainActivity.class);
                 startActivity(intent);
                 mActivity.finish();
-            } else if (count == 0) {
+            } else {
                 MyToast.showShort(mActivity, "账号或密码错误!");
-            } else if (count == -1) {
-                MyToast.showShort(mActivity, "登录失败,请联系管理员");
             }
+
+
+        } catch (DbException e) {
+            LogUtil.e("发生错误==" + e.toString());
+            e.printStackTrace();
         }
 
 

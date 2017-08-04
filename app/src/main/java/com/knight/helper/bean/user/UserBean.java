@@ -1,15 +1,18 @@
 package com.knight.helper.bean.user;
 
+import org.xutils.DbManager;
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
+import org.xutils.ex.DbException;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by lemon on 2017/7/27.
  */
 
-@Table(name = "userConfig")
+@Table(name = "UserBase")
 public class UserBean implements Serializable {
 
     /**
@@ -21,25 +24,24 @@ public class UserBean implements Serializable {
 
 
     /**
-     * name = "id"：数据库表中的一个字段
-     * isId = true：是否是主键
-     * autoGen = true：是否自动增长
-     * property = "NOT NULL"：添加约束
-     */
-    @Column(name = "id", autoGen = true, property = "NOT NULL")
-    private int id;
-
-    /**
      * uid 32位
      */
     @Column(name = "uid", isId = true, property = "NOT NULL")
     private String uid;
+
 
     /**
      * 登录名
      */
     @Column(name = "username")
     private String username;
+
+
+    /**
+     * 昵称
+     */
+    @Column(name = "nickname")
+    private String nickname;
 
     /**
      * 密码
@@ -97,12 +99,15 @@ public class UserBean implements Serializable {
     @Column(name = "loginCount")
     private long loginCount;
 
-    public int getId() {
-        return id;
+
+    public List<UserInfo> getUserInfo(DbManager db) throws DbException {
+        return db.selector(UserInfo.class).where("uid", "=", this.uid).findAll();
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public List<UserChat> getUserChat(DbManager db) throws DbException {
+
+        //只要是跟该用户
+        return db.selector(UserChat.class).where("chatId", "=", this.uid).findAll();
     }
 
     public String getUid() {
@@ -120,6 +125,15 @@ public class UserBean implements Serializable {
     public void setUsername(String username) {
         this.username = username;
     }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
 
     public String getPassword() {
         return password;
@@ -200,7 +214,6 @@ public class UserBean implements Serializable {
 
         UserBean userBean = (UserBean) o;
 
-        if (getId() != userBean.getId()) return false;
         if (!getUid().equals(userBean.getUid())) return false;
         if (!getUsername().equals(userBean.getUsername())) return false;
         return getPassword().equals(userBean.getPassword());
@@ -209,26 +222,11 @@ public class UserBean implements Serializable {
 
     @Override
     public int hashCode() {
-        int result = getId();
-        result = 31 * result + getUid().hashCode();
+        int result =  getUid().hashCode();
         result = 31 * result + getUsername().hashCode();
         result = 31 * result + getPassword().hashCode();
         return result;
     }
 
-    @Override
-    public String toString() {
-        return "UserBean{" +
-                "id=" + id +
-                ", uid='" + uid + '\'' +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", salt='" + salt + '\'' +
-                ", isOnline=" + isOnline +
-                ", disabled=" + disabled +
-                ", email='" + email + '\'' +
-                ", loginAt=" + loginAt +
-                ", loginCount=" + loginCount +
-                '}';
-    }
+
 }

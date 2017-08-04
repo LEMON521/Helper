@@ -209,10 +209,12 @@ public class RegisterFragment extends BaseFragment implements Serializable {
 
         try {
             mApp.db.save(addUserBean);
+            back();//返回到登录界面
+            LogUtil.e("注册成功!");
             MyToast.showShort(mActivity, "注册成功,请登录!");
         } catch (DbException e) {
             e.printStackTrace();
-            MyToast.showShort(mActivity, "注册失败,请来向你管理员");
+            MyToast.showShort(mActivity, "注册失败,请询问管理员");
         }
 
 
@@ -271,9 +273,6 @@ public class RegisterFragment extends BaseFragment implements Serializable {
 
                 if (boolean_user && boolean_password && boolean_password_again) {
                     registerUser();
-                    back();//返回到登录界面
-
-                    LogUtil.e("注册成功!");
                 } else {
                     MyToast.showShort(mActivity, "用户名或密码输入有误,请检查!");
                 }

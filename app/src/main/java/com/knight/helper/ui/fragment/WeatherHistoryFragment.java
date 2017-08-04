@@ -17,7 +17,7 @@ import java.io.Serializable;
  * Created by lemon on 2017/7/22.
  */
 
-@ContentView(R.layout.fragment_login)
+@ContentView(R.layout.fragment_weather_history)
 public class WeatherHistoryFragment extends BaseFragment implements Serializable {
 //    @ViewInject(R.id.fragment_weather_history_lv)
 //    private ListView home_lv;

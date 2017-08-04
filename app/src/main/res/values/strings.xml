@@ -14,6 +14,7 @@
     <string name="title_home">主页</string>
     <string name="title_fun">乐一乐</string>
     <string name="title_weather">历史天气</string>
+    <string name="title_mine">我</string>
 
     <!--chat fragment 聊天界面-->
     <string name="chat_send_hint">想跟我说什么情话呢☺️</string>
@@ -31,4 +32,9 @@
     <!--register fragment 注册页面-->
     <string name="fragment_register_password_confirm">确认您的密码</string>
     <string name="fragment_register_register">提交</string>
+
+    <!--我的界面-->
+    <string name="fragment_mine_setting">设置</string>
+    <string name="fragment_mine_about">关于</string>
+    <string name="fragment_mine_logout">退出登录</string>
 </resources>

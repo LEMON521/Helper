@@ -31,7 +31,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:src="@mipmap/image_user_defult" />
+                android:src="@mipmap/image_user_default" />
 
             <ImageView
                 android:id="@+id/fragment_register_iv_line_user"

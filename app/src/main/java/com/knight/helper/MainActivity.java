@@ -12,6 +12,7 @@ import com.knight.helper.ui.BaseActivity;
 import com.knight.helper.ui.BaseFragment;
 import com.knight.helper.ui.fragment.ChatFragment;
 import com.knight.helper.ui.fragment.HomeFragment;
+import com.knight.helper.ui.fragment.MineFragment;
 import com.knight.helper.ui.fragment.WeatherHistoryFragment;
 
 import org.xutils.view.annotation.ContentView;
@@ -34,10 +35,10 @@ public class MainActivity extends BaseActivity {
     private BaseFragment[] fragments;
     private FragmentTransaction manager;
     private Integer fragmentValue;
-    private BaseFragment fragmentDefult;
+    private BaseFragment fragmentDefault;
 
     private String fragmentTag;
-    private BaseFragment mHomeFragment, mChatFragment, mWeatherHistoryFragment;
+    private BaseFragment mHomeFragment, mChatFragment, mWeatherHistoryFragment, mMineFragment;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -69,6 +70,14 @@ public class MainActivity extends BaseActivity {
                     switchFragment(fragments[fragmentValue]);
                     Toast.makeText(mActivity, "历史天气😋", Toast.LENGTH_SHORT).show();
                     return true;
+
+                case R.id.navigation_mine:
+                    fragmentTag = "FRAGMENT_MINE";
+                    fragmentValue = tabMap.get(R.id.navigation_mine);
+                    //setFragment(mWeatherHistoryFragment, fragmentTag);
+                    switchFragment(fragments[fragmentValue]);
+                    Toast.makeText(mActivity, "我的信息😋", Toast.LENGTH_SHORT).show();
+                    return true;
             }
             return false;
         }
@@ -91,6 +100,10 @@ public class MainActivity extends BaseActivity {
             mWeatherHistoryFragment = new WeatherHistoryFragment();
         }
 
+        if (mMineFragment == null) {
+            mMineFragment = new MineFragment();
+        }
+
         if (tabMap == null) {
             tabMap = new HashMap<>();
         }
@@ -99,11 +112,12 @@ public class MainActivity extends BaseActivity {
             tabMap.put(R.id.navigation_home, 0);
             tabMap.put(R.id.navigation_chat, 1);
             tabMap.put(R.id.navigation_weather, 2);
+            tabMap.put(R.id.navigation_mine, 3);
 
         }
 
         if (fragments == null) {
-            fragments = new BaseFragment[]{mHomeFragment, mChatFragment, mWeatherHistoryFragment};
+            fragments = new BaseFragment[]{mHomeFragment, mChatFragment, mWeatherHistoryFragment, mMineFragment};
         }
 
         if (manager == null) {
@@ -112,9 +126,11 @@ public class MainActivity extends BaseActivity {
             manager.add(R.id.content, mHomeFragment)
                     .add(R.id.content, mChatFragment)
                     .add(R.id.content, mWeatherHistoryFragment)
+                    .add(R.id.content, mMineFragment)
                     .hide(mHomeFragment)
                     .hide(mChatFragment)
                     .hide(mWeatherHistoryFragment)
+                    .hide(mMineFragment)
                     .show(mChatFragment)
                     .commit();
         }
@@ -123,8 +139,7 @@ public class MainActivity extends BaseActivity {
         //不知为何,如果用ViewInject的话,这里的切换事件就触发不了
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-        //navigation.setSelectedItemId(R.id.navigation_chat);
+        navigation.setSelectedItemId(R.id.navigation_chat);
     }
 
 
@@ -146,19 +161,20 @@ public class MainActivity extends BaseActivity {
 
     /**
      * 这样坐的好处,就是fragment没有被销毁,但是有另外一个问题,就是内存(未验证此说法)
+     *
      * @param fragment
      */
-    private void switchFragment(BaseFragment fragment){
+    private void switchFragment(BaseFragment fragment) {
 
-        if (fragmentDefult == null){
-            fragmentDefult = mChatFragment;
+        if (fragmentDefault == null) {
+            fragmentDefault = mChatFragment;
         }
 
-        getSupportFragmentManager().beginTransaction().hide(fragmentDefult)
+        getSupportFragmentManager().beginTransaction().hide(fragmentDefault)
                 .show(fragment)
                 .commit();
 
-        fragmentDefult = fragment;
+        fragmentDefault = fragment;
     }
 
 }

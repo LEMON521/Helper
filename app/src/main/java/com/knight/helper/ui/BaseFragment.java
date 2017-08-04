@@ -36,7 +36,7 @@ public abstract class BaseFragment extends Fragment implements Serializable {
         view = x.view().inject(this, inflater, null); //注入view和事件
 
         initView(inflater, container, savedInstanceState);
-
+        LogUtil.e("BaseFragment---onCreateView");
         return view;
     }
 
@@ -49,29 +49,29 @@ public abstract class BaseFragment extends Fragment implements Serializable {
      */
     public abstract void initView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState);
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        LogUtil.e("BaseFragment---onResume");
-//    }
-//
-//    @Override
-//    public void onCreate(@Nullable Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        LogUtil.e("BaseFragment---onCreate");
-//    }
-//
-//    @Override
-//    public void onPause() {
-//        super.onPause();
-//        LogUtil.e("BaseFragment---onPause");
-//    }
-//
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        LogUtil.e("BaseFragment---onStart");
-//    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        LogUtil.e("BaseFragment---onResume");
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        LogUtil.e("BaseFragment---onCreate");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LogUtil.e("BaseFragment---onPause");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        LogUtil.e("BaseFragment---onStart");
+    }
 //
 //    @Override
 //    public void onAttach(Context context) {
@@ -79,11 +79,11 @@ public abstract class BaseFragment extends Fragment implements Serializable {
 //        LogUtil.e("BaseFragment---onAttach");
 //    }
 //
-//    @Override
-//    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-//        super.onActivityCreated(savedInstanceState);
-//        LogUtil.e("BaseFragment---onActivityCreated");
-//    }
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        LogUtil.e("BaseFragment---onActivityCreated");
+    }
 //
 //    @Override
 //    public void onAttach(Activity activity) {
