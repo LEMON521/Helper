@@ -187,7 +187,7 @@ protected void dbFind() throws DbException {
         List<User> users = db.selector(User.class)
                 .where("name","like","%kevin%")
                 .and("email", "=", "caolbmail@gmail.com")
-                .orderBy("regTime",true)
+                .orderBy("regTime",true)//true:降序排列（从后往前查询），走的路线：先查询全部，然后根据time降序，然后走limit的数量
                 .limit(2) //只查询两条记录
                 .offset(2) //偏移两个,从第三个记录开始返回,limit配合offset达到sqlite的limit m,n的查询
                 .findAll();

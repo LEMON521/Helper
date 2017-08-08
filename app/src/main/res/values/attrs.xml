@@ -24,4 +24,16 @@
             <enum name="invisible" value="1"/>
         </attr>
     </declare-styleable>
+    
+    
+    <declare-styleable name="InformationView">
+        <!--设置左边文字-->
+        <attr name="leftText" format="reference|string"/>
+        <!--设置左边图片src-->
+        <attr name="leftSrc" format="reference|integer"/>
+        <!--设置右边文字-->
+        <attr name="rightText" format="reference|string"/>
+        <!--设置右边图片src-->
+        <attr name="rightSrc" format="reference|integer"/>
+    </declare-styleable>
 </resources>

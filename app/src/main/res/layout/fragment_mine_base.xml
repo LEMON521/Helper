@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.knight.helper.view.InformationView
+            android:layout_marginTop="10dp"
+            android:id="@+id/fragment_mine_v_base"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:leftSrc="@mipmap/tab_home_s"
+            app:rightSrc="@mipmap/tab_home_n" />
+
+        <com.knight.helper.view.InformationView
+            android:layout_marginTop="20dp"
+            android:id="@+id/fragment_mine_v_setting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:leftSrc="@mipmap/tab_home_s"
+            app:rightSrc="@mipmap/tab_home_n" />
+
+        <com.knight.helper.view.InformationView
+            android:id="@+id/fragment_mine_v_about"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:leftSrc="@mipmap/tab_home_s"
+            app:rightSrc="@mipmap/tab_home_n" />
+
+
+
+
+    </LinearLayout>
+</LinearLayout>
