@@ -248,31 +248,35 @@ public class ChatFragment extends BaseFragment implements Serializable, OnRefres
                     .offset(offset)//从第几个查询，注意：0是第一个
                     .limit(10)
                     .findAll();
-            LogUtil.e("分组查询::" + offset + "\n" + "数量==" + userChats.size() + "\n" + userChats.toString());
 
-            int size = userChats.size();
+            if (userChats!=null) {
+                LogUtil.e("分组查询::" + offset + "\n" + "数量==" + userChats.size() + "\n" + userChats.toString());
 
-            if (size > 0) {
-                for (UserChat uChat : userChats) {
-                    chatBeanArrayList.add(0, uChat);
+                int size = userChats.size();
+
+                if (size > 0) {
+                    for (UserChat uChat : userChats) {
+                        chatBeanArrayList.add(0, uChat);
+                    }
+
+
+                    offset += size;
+                    chatAdapter.notifyDataSetChanged();
+                    fun_lv.setSelection(size);//设置选中的位置。注意：应当在chatAdapter.notifyDataSetChanged();之后设置选中条目，因为在那之前，数据条目的属兔还没有更新
+                } else {
+                    if (offset==0) {
+                        MyToast.showShort(mActivity, "你还没有聊天哟，快开启🔛聊天之路吧");
+                    }else {
+                        MyToast.showShort(mActivity, "你已经把我看完啦！👀");
+                    }
+
                 }
 
-
-                offset += size;
-                chatAdapter.notifyDataSetChanged();
-                fun_lv.setSelection(size);//设置选中的位置。注意：应当在chatAdapter.notifyDataSetChanged();之后设置选中条目，因为在那之前，数据条目的属兔还没有更新
-            } else {
-                if (offset==0) {
-                    MyToast.showShort(mActivity, "你还没有聊天哟，快开启🔛聊天之路吧");
-                }else {
-                    MyToast.showShort(mActivity, "你已经把我看完啦！👀");
-                }
-
+                LogUtil.e("==========================");
+                //如果为true，则会一直刷新，所以说，这个是控制刷新状态的
+                swipeToLoadLayout.setRefreshing(false);
             }
 
-            LogUtil.e("==========================");
-            //如果为true，则会一直刷新，所以说，这个是控制刷新状态的
-            swipeToLoadLayout.setRefreshing(false);
 
 
         } catch (DbException e) {

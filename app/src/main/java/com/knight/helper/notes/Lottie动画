@@ -1,0 +1,21 @@
+注意:最低版本为16
+
+
+1:添加依赖
+dependencies {
+  compile 'com.airbnb.android:lottie:1.0.1'
+}
+
+2.layout文件中添加
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/animation_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:lottie_fileName="hello-world.json"/////////--->看这里
+        app:lottie_loop="true"
+        app:lottie_autoPlay="true" />
+
+3.将帅帅的美工给你的json文件重命名为xml中lottie_fileName的值，
+如上就是hello-world.json。
+将hello-world.json放入 app/src/main/assets目录中。打包吧！！

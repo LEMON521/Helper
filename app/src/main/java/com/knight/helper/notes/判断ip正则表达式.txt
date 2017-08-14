@@ -1,0 +1,124 @@
+﻿"^(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|[1-9])\\."
++"(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\."
++"(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\."
++"(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)$"
+
+
+((?:(?:25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))\.){3}(?:25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d))))
+
+
+自定义Toast
+
+public class Toaster {
+    private static Context context;
+    private static Handler handler;
+    private static Toast toast;
+    private static Toaster toaster;
+
+    private Toaster(Context context) {
+        Toaster.context = context.getApplicationContext();
+        handler = new Handler(Looper.getMainLooper());
+    }
+
+    public synchronized static void init(Context context) {
+        if (Toaster.toaster != null && Toaster.handler != null && Toaster.context != null) {
+            throw new RuntimeException("Toast.init() 初始化多遍");
+        }
+        Toaster.toaster = new Toaster(context);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.CUPCAKE)
+    public static void show(final String text, final boolean isLong) {
+        if (TextUtils.isEmpty(text)) {
+            return;
+        }
+        checkInit();
+        if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
+            showToast(text, isLong);
+        } else {
+            Toaster.handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    showToast(text, isLong);
+                }
+            });
+        }
+    }
+
+    private static void showToast(String text, boolean isLong) {
+        if (toast != null) {
+            toast.cancel();
+            toast = null;
+        }
+        try {
+            toast = Toast.makeText(context, text, isLong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT);
+            toast.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void show(int resId, boolean isLong) {
+        show(context.getString(resId), isLong);
+    }
+
+
+    public static void show(String text) {
+        show(text, false);
+    }
+
+    public static void show(int res) {
+        show(res, false);
+    }
+
+    private static void checkInit() {
+        if (Toaster.toaster == null) {
+            synchronized (Toaster.class) {
+                if (Toaster.toaster == null) {
+                    init(MyApp.getAppContext());
+                }
+            }
+        }
+    }
+}
+
+
+
+//加固相关
+https://developer.android.com/studio/build/multidex.html?hl=zh-cn#dev-build
+
+
+
+
+现在做Android，不光要回native，还要回weex，rn，hybird，服务器，jni
+DBA
+
+
+
+而且虽然做后台 ，但是对http协议没什么了解，也不懂数据库。这种水平也没法找工作。
+
+
+一个 多人在线协作画思维导图+实时语音视频。
+一个 p2p组网 Kademlia
+实时语音 webrtc
+
+
+优达学城
+注册个账号 就行， 视频随便看
+android、 统计学入门、 机器学习 的视频 都有
+
+
+去看下敏捷开发的scrum，这个管理方法比较简单，可操作性高。
+
+
+后端云:免后端开发----https://docs.bmob.cn/data/Android/c_example/doc/index.html
+
+http://www.cloudleft.com/
+
+
+第三方库-----http://www.jianshu.com/p/cae606f45c0b-----矢量图,各种动画
+
+
+权限 ，我试了 rxpermission。 这个 好用。 比较简单。
+
+
